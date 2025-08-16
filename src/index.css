@@ -2,95 +2,169 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* NeoBank Design System - Modern Banking UI with Liquid Glass Effects */
 
 @layer base {
   :root {
+    /* Core NeoBank Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --background-secondary: 244 16% 97%;
+    --foreground: 220 19% 20%;
+    
+    /* Primary Purple Scheme */
+    --primary: 256 52% 52%;
+    --primary-light: 256 52% 62%;
+    --primary-dark: 256 52% 42%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary Teal */
+    --secondary: 174 62% 47%;
+    --secondary-light: 174 62% 57%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Status Colors */
+    --success: 134 61% 56%;
+    --success-foreground: 0 0% 100%;
+    --error: 0 84% 60%;
+    --error-foreground: 0 0% 100%;
+    --warning: 36 77% 49%;
+    --warning-foreground: 0 0% 100%;
+    
+    /* Card & Glass Effects */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --card-foreground: 220 19% 20%;
+    --card-glass: 0 0% 100% / 0.7;
+    --glass-border: 0 0% 100% / 0.2;
+    
+    /* Interactive Elements */
+    --muted: 244 16% 97%;
+    --muted-foreground: 220 9% 50%;
+    --accent: 244 16% 97%;
+    --accent-foreground: 220 19% 20%;
+    
+    /* Borders & Inputs */
+    --border: 244 16% 90%;
+    --input: 244 16% 97%;
+    --ring: 256 52% 52%;
+    
+    /* Glass Gradients */
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.3));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--secondary-light)));
+    
+    /* Shadows */
+    --shadow-glass: 0 8px 32px 0 hsl(0 0% 0% / 0.1);
+    --shadow-primary: 0 8px 32px 0 hsl(var(--primary) / 0.3);
+    --shadow-card: 0 4px 24px 0 hsl(0 0% 0% / 0.08);
+    
+    --radius: 12px;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Theme Colors */
+    --background: 220 19% 7%;
+    --background-secondary: 220 19% 11%;
+    --foreground: 0 0% 98%;
+    
+    /* Primary Purple (lighter in dark) */
+    --primary: 256 52% 65%;
+    --primary-light: 256 52% 75%;
+    --primary-dark: 256 52% 55%;
+    --primary-foreground: 220 19% 7%;
+    
+    /* Secondary Teal */
+    --secondary: 174 62% 55%;
+    --secondary-light: 174 62% 65%;
+    
+    /* Cards & Glass in Dark */
+    --card: 220 19% 11%;
+    --card-foreground: 0 0% 98%;
+    --card-glass: 220 19% 11% / 0.8;
+    --glass-border: 0 0% 100% / 0.1;
+    
+    /* Interactive Elements Dark */
+    --muted: 220 19% 15%;
+    --muted-foreground: 220 9% 60%;
+    --accent: 220 19% 15%;
+    --accent-foreground: 0 0% 98%;
+    
+    /* Borders & Inputs Dark */
+    --border: 220 19% 20%;
+    --input: 220 19% 15%;
+    
+    /* Dark Glass Gradients */
+    --gradient-glass: linear-gradient(135deg, hsl(220 19% 11% / 0.8), hsl(220 19% 11% / 0.3));
+    --shadow-glass: 0 8px 32px 0 hsl(0 0% 0% / 0.3);
+  }
+  
+  * {
+    @apply border-border;
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+  }
+  
+  /* Glass Morphism Effects */
+  .glass {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-glass);
+  }
+  
+  .glass-card {
+    background: hsl(var(--card-glass));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-card);
+  }
+  
+  /* Liquid Animations */
+  @keyframes liquid-flow {
+    0%, 100% { transform: translateX(-50%) translateY(-50%) rotate(0deg) scale(1); }
+    25% { transform: translateX(-50%) translateY(-50%) rotate(90deg) scale(1.1); }
+    50% { transform: translateX(-50%) translateY(-50%) rotate(180deg) scale(0.9); }
+    75% { transform: translateX(-50%) translateY(-50%) rotate(270deg) scale(1.1); }
+  }
+  
+  @keyframes glass-shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
+    50% { box-shadow: 0 0 40px hsl(var(--primary) / 0.5); }
+  }
+  
+  /* Animated Liquid Background */
+  .liquid-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .liquid-bg::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      hsl(var(--primary) / 0.1),
+      hsl(var(--secondary) / 0.1),
+      hsl(var(--primary) / 0.1)
+    );
+    border-radius: 50%;
+    animation: liquid-flow 20s infinite linear;
+    z-index: -1;
   }
 }
 
