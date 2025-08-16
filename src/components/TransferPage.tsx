@@ -11,15 +11,17 @@ import {
   Banknote, 
   Shield, 
   Clock,
-  CheckCircle,
   Smartphone
 } from "lucide-react";
 import { useState } from "react";
 
-export default function TransferPage() {
+interface TransferPageProps {
+  onTransferSuccess: (transferData: any) => void;
+}
+
+export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
   const { toast } = useToast();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [smsCode, setSmsCode] = useState(['', '', '', '', '', '']);
   const [transferData, setTransferData] = useState({
     fromAccount: '',
@@ -55,7 +57,7 @@ export default function TransferPage() {
       if (newCode.every(digit => digit !== '') && newCode.join('') === '123456') {
         setTimeout(() => {
           setIsConfirmOpen(false);
-          setIsSuccessOpen(true);
+          onTransferSuccess(transferData);
           toast({
             title: "Transfer Successful!",
             description: `$${transferData.amount} has been transferred successfully.`,
@@ -97,7 +99,6 @@ export default function TransferPage() {
       amount: '',
       description: ''
     });
-    setIsSuccessOpen(false);
   };
 
   return (
@@ -107,7 +108,7 @@ export default function TransferPage() {
         <p className="text-muted-foreground">Send money quickly and securely</p>
       </div>
 
-      <GlassCard variant="glass" className="p-6">
+      <GlassCard variant="ultra" hover className="p-6">
         <form onSubmit={handleTransfer} className="space-y-6">
           {/* From Account */}
           <div className="space-y-2">
@@ -116,7 +117,7 @@ export default function TransferPage() {
               value={transferData.fromAccount} 
               onValueChange={(value) => setTransferData(prev => ({...prev, fromAccount: value}))}
             >
-              <SelectTrigger className="glass-card border-0">
+              <SelectTrigger className="glass-card border-0 glass-hover">
                 <SelectValue placeholder="Select account to transfer from" />
               </SelectTrigger>
               <SelectContent>
@@ -141,7 +142,7 @@ export default function TransferPage() {
               value={transferData.toAccount} 
               onValueChange={(value) => setTransferData(prev => ({...prev, toAccount: value}))}
             >
-              <SelectTrigger className="glass-card border-0">
+              <SelectTrigger className="glass-card border-0 glass-hover">
                 <SelectValue placeholder="Select recipient" />
               </SelectTrigger>
               <SelectContent>
@@ -172,7 +173,7 @@ export default function TransferPage() {
                 step="0.01"
                 min="0"
                 placeholder="0.00"
-                className="glass-card border-0 pl-8"
+                className="glass-card border-0 pl-8 glass-hover"
                 value={transferData.amount}
                 onChange={(e) => setTransferData(prev => ({...prev, amount: e.target.value}))}
               />
@@ -185,7 +186,7 @@ export default function TransferPage() {
             <Textarea
               id="description"
               placeholder="What's this transfer for?"
-              className="glass-card border-0 resize-none"
+              className="glass-card border-0 resize-none glass-hover"
               rows={3}
               value={transferData.description}
               onChange={(e) => setTransferData(prev => ({...prev, description: e.target.value}))}
@@ -194,7 +195,7 @@ export default function TransferPage() {
 
           {/* Transfer Summary */}
           {transferData.fromAccount && transferData.toAccount && transferData.amount && (
-            <GlassCard variant="liquid" className="p-4">
+            <GlassCard variant="float" morph hover className="p-4">
               <h3 className="font-semibold mb-3 flex items-center gap-2">
                 <Shield size={16} />
                 Transfer Summary
@@ -225,14 +226,14 @@ export default function TransferPage() {
             <Button 
               type="button" 
               variant="outline" 
-              className="flex-1 glass-card border-0"
+              className="flex-1 glass-card border-0 glass-hover"
               onClick={resetForm}
             >
               Clear
             </Button>
             <Button 
               type="submit" 
-              className="flex-1 bg-gradient-primary hover:opacity-90 shadow-primary"
+              className="flex-1 bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
             >
               <ArrowUpDown size={16} />
               Transfer Money
@@ -243,19 +244,19 @@ export default function TransferPage() {
 
       {/* Features */}
       <div className="grid sm:grid-cols-3 gap-4">
-        <GlassCard variant="glass" className="p-4 text-center">
+        <GlassCard variant="glass" hover className="p-4 text-center">
           <Shield className="w-8 h-8 mx-auto mb-2 text-primary" />
           <h3 className="font-medium mb-1">Secure</h3>
           <p className="text-sm text-muted-foreground">Bank-level encryption</p>
         </GlassCard>
         
-        <GlassCard variant="glass" className="p-4 text-center">
+        <GlassCard variant="glass" hover className="p-4 text-center">
           <Clock className="w-8 h-8 mx-auto mb-2 text-secondary" />
           <h3 className="font-medium mb-1">Instant</h3>
           <p className="text-sm text-muted-foreground">Transfer in seconds</p>
         </GlassCard>
         
-        <GlassCard variant="glass" className="p-4 text-center">
+        <GlassCard variant="glass" hover className="p-4 text-center">
           <Banknote className="w-8 h-8 mx-auto mb-2 text-success" />
           <h3 className="font-medium mb-1">No Fees</h3>
           <p className="text-sm text-muted-foreground">Free transfers</p>
@@ -305,28 +306,6 @@ export default function TransferPage() {
                 Resend Code
               </Button>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Success Modal */}
-      <Dialog open={isSuccessOpen} onOpenChange={setIsSuccessOpen}>
-        <DialogContent className="sm:max-w-md text-center glass-card border-0">
-          <div className="space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-success/20 flex items-center justify-center">
-              <CheckCircle size={32} className="text-success" />
-            </div>
-            
-            <DialogHeader>
-              <DialogTitle className="text-success">Transfer Successful!</DialogTitle>
-              <DialogDescription>
-                Your transfer of ${transferData.amount} has been processed successfully.
-              </DialogDescription>
-            </DialogHeader>
-            
-            <Button onClick={resetForm} className="w-full">
-              Make Another Transfer
-            </Button>
           </div>
         </DialogContent>
       </Dialog>

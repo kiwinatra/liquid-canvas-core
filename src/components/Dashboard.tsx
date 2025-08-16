@@ -10,7 +10,7 @@ import {
   EyeOff,
   Wallet
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface Account {
   id: string;
@@ -37,6 +37,12 @@ interface DashboardProps {
 
 export default function Dashboard({ onPageChange }: DashboardProps) {
   const [balanceVisible, setBalanceVisible] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Предотвращаем мигание при загрузке
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
 
   const accounts: Account[] = [
     {
@@ -106,6 +112,18 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
 
   const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0);
 
+  if (!isLoaded) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-8 bg-accent rounded-lg w-1/3"></div>
+        <div className="h-32 bg-accent rounded-lg"></div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {[1,2,3,4].map(i => <div key={i} className="h-20 bg-accent rounded-lg"></div>)}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Welcome Section */}
@@ -124,7 +142,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
       </div>
 
       {/* Total Balance Card */}
-      <GlassCard variant="liquid" className="p-6">
+      <GlassCard variant="ultra" hover morph className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Total Balance</h2>
           <Button
@@ -159,7 +177,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <Button 
           variant="outline"
-          className="h-20 flex-col gap-2 glass-card border-0"
+          className="h-20 flex-col gap-2 glass-card border-0 glass-hover"
           onClick={() => onPageChange('transfer')}
         >
           <ArrowUpDown size={20} />
@@ -167,7 +185,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
         </Button>
         <Button 
           variant="outline"
-          className="h-20 flex-col gap-2 glass-card border-0"
+          className="h-20 flex-col gap-2 glass-card border-0 glass-hover"
           onClick={() => onPageChange('accounts')}
         >
           <Plus size={20} />
@@ -175,7 +193,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
         </Button>
         <Button 
           variant="outline"
-          className="h-20 flex-col gap-2 glass-card border-0"
+          className="h-20 flex-col gap-2 glass-card border-0 glass-hover"
           onClick={() => onPageChange('transactions')}
         >
           <TrendingUp size={20} />
@@ -183,7 +201,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
         </Button>
         <Button 
           variant="outline"
-          className="h-20 flex-col gap-2 glass-card border-0"
+          className="h-20 flex-col gap-2 glass-card border-0 glass-hover"
           onClick={() => onPageChange('accounts')}
         >
           <CreditCard size={20} />
@@ -199,14 +217,15 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
             variant="ghost" 
             size="sm"
             onClick={() => onPageChange('accounts')}
+            className="glass-hover"
           >
             View All
           </Button>
         </div>
         
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {accounts.map((account) => (
-            <GlassCard key={account.id} variant="glass" className="p-4">
+          {accounts.map((account, index) => (
+            <GlassCard key={account.id} variant="float" hover className="p-4" style={{ animationDelay: `${index * 0.1}s` }}>
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className="p-2 rounded-lg bg-accent">
@@ -246,12 +265,13 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
             variant="ghost" 
             size="sm"
             onClick={() => onPageChange('transactions')}
+            className="glass-hover"
           >
             View All
           </Button>
         </div>
         
-        <GlassCard variant="glass" className="p-0 overflow-hidden">
+        <GlassCard variant="ultra" hover className="p-0 overflow-hidden">
           <div className="divide-y divide-border">
             {recentTransactions.map((transaction) => (
               <div key={transaction.id} className="p-4 hover:bg-accent/50 transition-colors">

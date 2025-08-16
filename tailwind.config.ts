@@ -75,9 +75,12 @@ export default {
 				'card': 'var(--shadow-card)'
 			},
 			animation: {
-				'liquid-flow': 'liquid-flow 20s infinite linear',
-				'glass-shine': 'glass-shine 2s infinite',
-				'pulse-glow': 'pulse-glow 2s infinite',
+				'liquid-flow': 'liquid-flow 25s infinite linear',
+				'liquid-rotate': 'liquid-rotate 15s infinite linear',
+				'glass-shine': 'glass-shine 3s infinite',
+				'pulse-glow': 'pulse-glow 3s infinite',
+				'float': 'float 6s ease-in-out infinite',
+				'morph': 'morph 8s ease-in-out infinite',
 				'fade-in': 'fade-in 0.5s ease-out',
 				'slide-up': 'slide-up 0.3s ease-out',
 				'scale-in': 'scale-in 0.2s ease-out'

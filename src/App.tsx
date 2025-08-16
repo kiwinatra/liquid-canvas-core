@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Header from "./components/Header";
 import Dashboard from "./components/Dashboard";
 import TransferPage from "./components/TransferPage";
+import TransferSuccessPage from "./components/TransferSuccessPage";
 import AccountsPage from "./components/AccountsPage";
 import TransactionsPage from "./components/TransactionsPage";
 import { useState, useEffect } from "react";
@@ -14,6 +15,7 @@ const queryClient = new QueryClient();
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home');
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [transferData, setTransferData] = useState(null);
 
   // Initialize theme from localStorage
   useEffect(() => {
@@ -39,6 +41,12 @@ const App = () => {
 
   const handlePageChange = (page: string) => {
     setCurrentPage(page);
+    setTransferData(null); // Очищаем данные при смене страницы
+  };
+
+  const handleTransferSuccess = (data: any) => {
+    setTransferData(data);
+    setCurrentPage('transfer-success');
   };
 
   const renderPage = () => {
@@ -46,7 +54,15 @@ const App = () => {
       case 'home':
         return <Dashboard onPageChange={handlePageChange} />;
       case 'transfer':
-        return <TransferPage />;
+        return <TransferPage onTransferSuccess={handleTransferSuccess} />;
+      case 'transfer-success':
+        return (
+          <TransferSuccessPage 
+            transferData={transferData}
+            onBackToDashboard={() => handlePageChange('home')}
+            onNewTransfer={() => handlePageChange('transfer')}
+          />
+        );
       case 'accounts':
         return <AccountsPage />;
       case 'transactions':
