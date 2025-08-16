@@ -36,12 +36,12 @@ export default function TransactionsPage() {
     {
       id: '1',
       type: 'income',
-      amount: 2500.00,
-      description: 'Salary Deposit - Tech Corp',
-      date: '2024-08-16',
-      time: '09:00',
+      amount: 1467.08,
+      description: 'Твоя доля - как и обещал',
+      date: '2025-08-16',
+      time: '09:47',
       category: 'salary',
-      account: 'Main Checking (**** 1234)',
+      account: 'Main Checking (**** 9068)',
       status: 'completed',
       icon: '💼'
     },
@@ -138,8 +138,8 @@ export default function TransactionsPage() {
 
   const accounts = [
     'all', 
-    'Main Checking (**** 1234)',
-    'Savings (**** 5678)', 
+    'Main Checking (**** 2353)',
+    'Savings (**** s93jf)', 
     'Credit Card (**** 9012)'
   ];
 

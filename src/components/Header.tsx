@@ -58,7 +58,7 @@ export default function Header({ currentPage, onPageChange, isDark, onThemeToggl
                 <Wallet size={24} />
               </div>
               <span className="font-bold text-xl bg-gradient-primary bg-clip-text text-transparent">
-                NeoBank
+                QL7
               </span>
             </div>
 
@@ -142,7 +142,7 @@ export default function Header({ currentPage, onPageChange, isDark, onThemeToggl
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <GlassCard 
-            variant="glass" 
+             
             className="fixed top-16 left-4 right-4 p-4 z-50 md:hidden animate-slide-up"
           >
             <nav className="space-y-2">

@@ -108,7 +108,7 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
         <p className="text-muted-foreground">Send money quickly and securely</p>
       </div>
 
-      <GlassCard variant="ultra" hover className="p-6">
+      <GlassCard hover className="p-6">
         <form onSubmit={handleTransfer} className="space-y-6">
           {/* From Account */}
           <div className="space-y-2">

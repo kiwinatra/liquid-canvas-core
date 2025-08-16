@@ -41,10 +41,10 @@ export default function AccountsPage() {
   const accounts: Account[] = [
     {
       id: '1',
-      name: 'Main Checking',
-      number: '**** **** **** 1234',
+      name: 'Основной счет',
+      number: '**** **** **** 9064',
       balance: 24500.75,
-      currency: 'USD',
+      currency: 'РУБ',
       type: 'checking'
     },
     {

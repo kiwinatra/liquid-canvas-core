@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NeoBank Design System - Modern Banking UI with Liquid Glass Effects */
+/* QL7 design - there is all */
 
 @layer base {
   :root {
-    /* Core NeoBank Colors */
+    /* Core ql7 Colors */
     --background: 0 0% 100%;
     --background-secondary: 244 16% 97%;
     --foreground: 220 19% 20%;
@@ -211,7 +211,7 @@
   }
   
   @keyframes glass-shine {
-    0% { transform: translateX(-100%); }
+    0% { transform: translateX(100%); }
     100% { transform: translateX(100%); }
   }
   
@@ -222,7 +222,7 @@
   
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
+    50% { transform: translateY(0px); }
   }
   
   @keyframes morph {
@@ -288,14 +288,9 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
-  .glass-hover:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 
-      var(--shadow-primary),
-      0 20px 40px hsl(var(--primary) / 0.2);
-  }
+ 
 }
-}
+
 
 @layer base {
   * {

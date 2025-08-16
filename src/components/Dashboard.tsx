@@ -142,7 +142,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
       </div>
 
       {/* Total Balance Card */}
-      <GlassCard variant="ultra" hover morph className="p-6">
+      <GlassCard hover morph className="p-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Total Balance</h2>
           <Button
@@ -271,7 +271,7 @@ export default function Dashboard({ onPageChange }: DashboardProps) {
           </Button>
         </div>
         
-        <GlassCard variant="ultra" hover className="p-0 overflow-hidden">
+        <GlassCard hover className="p-0 overflow-hidden">
           <div className="divide-y divide-border">
             {recentTransactions.map((transaction) => (
               <div key={transaction.id} className="p-4 hover:bg-accent/50 transition-colors">

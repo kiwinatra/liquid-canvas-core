@@ -47,7 +47,7 @@ export default function TransferSuccessPage({
     <div className="min-h-[80vh] flex items-center justify-center liquid-bg">
       <div className="w-full max-w-md space-y-6">
         {/* Success Animation */}
-        <GlassCard variant="ultra" hover className="p-8 text-center">
+        <GlassCard hover className="p-8 text-center">
           <div className={`transition-all duration-500 ${animationStep >= 1 ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
             <div className="relative mx-auto mb-6">
               <div className="w-24 h-24 mx-auto rounded-full bg-success/20 flex items-center justify-center animate-pulse-glow">

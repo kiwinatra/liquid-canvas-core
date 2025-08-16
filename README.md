@@ -1,73 +1,41 @@
-# Welcome to your Lovable project
+# <img src="https://i.imgur.com/JQ9pXJD.png" width="40"> QL7 — Банк Будущего
 
-## Project info
+**🚀 Добро пожаловать в эру цифровых финансов!**  
+NeoBan сочетает передовые технологии и безупречный сервис для вашего комфорта.
 
-**URL**: https://lovable.dev/projects/12ca2dc7-b7c0-4ee2-8449-c39c84922312
+## ✨ Наши преимущества
+- 🔐 **Безопасность** уровня Fort Knox с блокчейн-шифрованием
+- 💎 **0%** на переводы между клиентами NeoBan
+- 🌍 Мгновенные операции в любой точке мира
+- 🤖 Персональный AI-ассистент для финансов
+- 📱 Интуитивное приложение с нейроинтерфейсом
 
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/12ca2dc7-b7c0-4ee2-8449-c39c84922312) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 🔥 Горячие предложения
+```diff
++ До 12% годовых на сберегательные счета
++ Кэшбэк до 7% по премиум-картам
 ```
 
-**Edit a file directly in GitHub**
+## 📊 Инвестиционные продукты
+| Продукт       | Доходность  | Риск   |
+|---------------|------------|--------|
+| NeoWealth     | до 24%     | средний|
+| CryptoPort    | до 40%     | высокий|
+| ESG-депозиты  | до 15%     | низкий |
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📍 Как нас найти
+```mermaid
+graph LR
+A[Мобильное приложение] --> B{Финансы}
+B --> C[Платежи]
+B --> D[Инвестиции]
+B --> E[Кредиты]
+```
 
-**Use GitHub Codespaces**
+**💡 Техподдержка 24/7**:  
+📞 `8800-NEOBAN`  
+✉️ [help@neoban.digital](mailto:help@ql7.digital)  
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+[![AppStore](https://i.imgur.com/yl3qRxW.png)](https://apps.apple.com) [![GooglePlay](https://i.imgur.com/9KElw0k.png)](https://play.google.com)
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/12ca2dc7-b7c0-4ee2-8449-c39c84922312) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+> © 2025 QL7 | Все права защищены технологией **NeuroSecure™** 
