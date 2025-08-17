@@ -67,7 +67,9 @@ export default {
 			backgroundImage: {
 				'gradient-glass': 'var(--gradient-glass)',
 				'gradient-primary': 'var(--gradient-primary)',
-				'gradient-secondary': 'var(--gradient-secondary)'
+				'gradient-secondary': 'var(--gradient-secondary)',
+				'gradient-success': 'var(--gradient-success)',
+				'gradient-error': 'var(--gradient-error)'
 			},
 			boxShadow: {
 				'glass': 'var(--shadow-glass)',

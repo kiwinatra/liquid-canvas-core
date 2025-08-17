@@ -8,6 +8,8 @@ import TransferPage from "./components/TransferPage";
 import TransferSuccessPage from "./components/TransferSuccessPage";
 import AccountsPage from "./components/AccountsPage";
 import TransactionsPage from "./components/TransactionsPage";
+import CryptoPage from "./components/CryptoPage";
+import SettingsPage from "./components/SettingsPage";
 import { useState, useEffect } from "react";
 
 const queryClient = new QueryClient();
@@ -67,6 +69,10 @@ const App = () => {
         return <AccountsPage />;
       case 'transactions':
         return <TransactionsPage />;
+      case 'crypto':
+        return <CryptoPage />;
+      case 'settings':
+        return <SettingsPage isDarkMode={isDarkMode} onThemeToggle={toggleTheme} />;
       default:
         return <Dashboard onPageChange={handlePageChange} />;
     }

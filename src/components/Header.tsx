@@ -11,7 +11,9 @@ import {
   Moon,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
+  Bitcoin,
+  Settings
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -32,6 +34,8 @@ export default function Header({ currentPage, onPageChange, isDark, onThemeToggl
     { id: 'transactions', label: 'Transactions', icon: Receipt },
     { id: 'accounts', label: 'Accounts', icon: CreditCard },
     { id: 'transfer', label: 'Transfer', icon: ArrowUpDown },
+    { id: 'crypto', label: 'Crypto', icon: Bitcoin },
+    { id: 'settings', label: 'Settings', icon: Settings },
   ];
 
   const toggleLanguage = () => {

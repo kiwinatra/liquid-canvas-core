@@ -1,0 +1,63 @@
+{
+  "navigation": {
+    "home": "Home",
+    "transactions": "Transactions", 
+    "accounts": "Accounts",
+    "transfer": "Transfer",
+    "crypto": "Crypto",
+    "settings": "Settings"
+  },
+  "common": {
+    "balance": "Balance",
+    "send": "Send",
+    "receive": "Receive",
+    "buy": "Buy",
+    "sell": "Sell",
+    "view": "View",
+    "activity": "Activity",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error"
+  },
+  "dashboard": {
+    "title": "Welcome back!",
+    "subtitle": "Your financial overview",
+    "totalBalance": "Total Balance",
+    "quickActions": "Quick Actions",
+    "recentTransactions": "Recent Transactions",
+    "accounts": "Your Accounts"
+  },
+  "crypto": {
+    "title": "Cryptocurrency Trading",
+    "subtitle": "Buy, sell and track digital assets",
+    "portfolio": "Your Crypto Portfolio",
+    "marketData": "Market Data",
+    "buyTitle": "Buy Crypto",
+    "sellTitle": "Sell Crypto",
+    "amount": "Amount",
+    "price": "Price",
+    "total": "Total",
+    "24hChange": "24h Change"
+  },
+  "accounts": {
+    "title": "Your Accounts",
+    "subtitle": "Manage your banking accounts",
+    "openNewAccount": "Open New Account",
+    "accountCreated": "Account Created!",
+    "accountSecurity": "Account Security"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your preferences and security",
+    "profile": "Profile Information",
+    "security": "Security Settings",
+    "notifications": "Notifications",
+    "language": "Language",
+    "theme": "Theme",
+    "darkMode": "Dark Mode",
+    "lightMode": "Light Mode"
+  }
+}
