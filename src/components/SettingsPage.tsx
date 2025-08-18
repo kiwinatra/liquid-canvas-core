@@ -20,7 +20,8 @@ import {
   CreditCard,
   Download
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 interface SettingsPageProps {
   isDarkMode?: boolean;
@@ -29,14 +30,14 @@ interface SettingsPageProps {
 
 export default function SettingsPage({ isDarkMode = false, onThemeToggle }: SettingsPageProps) {
   const { toast } = useToast();
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useLocalStorage('userProfile', {
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
     phone: '+1 (555) 123-4567'
   });
   
-  const [security, setSecurity] = useState({
+  const [security, setSecurity] = useLocalStorage('securitySettings', {
     twoFactor: true,
     emailNotifications: true,
     smsNotifications: false,
@@ -44,9 +45,39 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
     loginAlerts: true
   });
 
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useLocalStorage('userLanguage', 'en');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSaveProfile = () => {
+  const validateProfile = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!profile.firstName.trim() || !profile.lastName.trim()) {
+      toast({
+        title: "Validation Error",
+        description: "First name and last name are required.",
+        variant: "destructive"
+      });
+      return false;
+    }
+    if (!emailRegex.test(profile.email)) {
+      toast({
+        title: "Validation Error", 
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleSaveProfile = async () => {
+    if (!validateProfile()) return;
+    
+    setIsLoading(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    setIsLoading(false);
     toast({
       title: "Profile Updated",
       description: "Your profile information has been saved successfully.",
@@ -62,6 +93,14 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
     toast({
       title: "Security Settings Updated",
       description: `${key.replace(/([A-Z])/g, ' $1').toLowerCase()} has been ${value ? 'enabled' : 'disabled'}.`,
+    });
+  };
+
+  const handleLanguageChange = (newLanguage: string) => {
+    setLanguage(newLanguage);
+    toast({
+      title: "Language Changed",
+      description: `Language has been changed to ${newLanguage === 'en' ? 'English' : 'Русский'}.`,
     });
   };
 
@@ -154,9 +193,10 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
             <div className="flex gap-4 mt-6">
               <Button 
                 onClick={handleSaveProfile}
+                disabled={isLoading}
                 className="bg-gradient-primary hover:opacity-90 shadow-primary"
               >
-                Save Changes
+                {isLoading ? "Saving..." : "Save Changes"}
               </Button>
               <Button variant="outline" className="glass-card border-0">
                 Cancel
@@ -280,7 +320,7 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
             <div className="space-y-6">
               <div className="space-y-2">
                 <Label>Language</Label>
-                <Select value={language} onValueChange={setLanguage}>
+                <Select value={language} onValueChange={handleLanguageChange}>
                   <SelectTrigger className="glass-card border-0 w-full sm:w-48">
                     <div className="flex items-center gap-2">
                       <Globe size={16} />
