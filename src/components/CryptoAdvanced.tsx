@@ -255,7 +255,7 @@ export default function CryptoAdvanced() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 glass-card">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <PieChartIcon size={16} />
             <span className="hidden sm:inline">Overview</span>

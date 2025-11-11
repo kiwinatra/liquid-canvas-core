@@ -21,7 +21,7 @@ import {
   Download
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useIndexedDB } from "@/hooks/useIndexedDB";
 
 interface SettingsPageProps {
   isDarkMode?: boolean;
@@ -30,14 +30,14 @@ interface SettingsPageProps {
 
 export default function SettingsPage({ isDarkMode = false, onThemeToggle }: SettingsPageProps) {
   const { toast } = useToast();
-  const [profile, setProfile] = useLocalStorage('userProfile', {
+  const [profile, setProfile] = useIndexedDB('userProfile', {
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
     phone: '+1 (555) 123-4567'
   });
-  
-  const [security, setSecurity] = useLocalStorage('securitySettings', {
+
+  const [security, setSecurity] = useIndexedDB('securitySettings', {
     twoFactor: true,
     emailNotifications: true,
     smsNotifications: false,
@@ -45,7 +45,8 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
     loginAlerts: true
   });
 
-  const [language, setLanguage] = useLocalStorage('userLanguage', 'en');
+  const [language, setLanguage] = useIndexedDB('userLanguage', 'en');
+  const [theme, setTheme] = useIndexedDB('userTheme', 'system');
   const [isLoading, setIsLoading] = useState(false);
 
   const validateProfile = () => {
@@ -84,20 +85,20 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
     });
   };
 
-  const handleSecurityChange = (key: string, value: boolean) => {
-    setSecurity(prev => ({
+  const handleSecurityChange = async (key: string, value: boolean) => {
+    await setSecurity(prev => ({
       ...prev,
       [key]: value
     }));
-    
+
     toast({
       title: "Security Settings Updated",
       description: `${key.replace(/([A-Z])/g, ' $1').toLowerCase()} has been ${value ? 'enabled' : 'disabled'}.`,
     });
   };
 
-  const handleLanguageChange = (newLanguage: string) => {
-    setLanguage(newLanguage);
+  const handleLanguageChange = async (newLanguage: string) => {
+    await setLanguage(newLanguage);
     toast({
       title: "Language Changed",
       description: `Language has been changed to ${newLanguage === 'en' ? 'English' : 'Русский'}.`,
@@ -108,20 +109,20 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
     <div className="space-y-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Account Settings</h1>
-          <p className="text-muted-foreground">Manage your preferences and security</p>
+          <h1 className="text-2xl font-bold">Настройки аккаунта</h1>
+          <p className="text-muted-foreground">Управляйте своими предпочтениями и безопасностью</p>
         </div>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 glass-card">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User size={16} />
-            <span className="hidden sm:inline">Profile</span>
+            <span className="hidden sm:inline">Профиль</span>
           </TabsTrigger>
           <TabsTrigger value="security" className="flex items-center gap-2">
             <Shield size={16} />
-            <span className="hidden sm:inline">Security</span>
+            <span className="hidden sm:inline">Безопасность</span>
           </TabsTrigger>
           <TabsTrigger value="notifications" className="flex items-center gap-2">
             <Bell size={16} />
@@ -318,6 +319,23 @@ export default function SettingsPage({ isDarkMode = false, onThemeToggle }: Sett
             </h2>
             
             <div className="space-y-6">
+              <div className="space-y-2">
+                <Label>Theme</Label>
+                <Select value={theme} onValueChange={setTheme}>
+                  <SelectTrigger className="glass-card border-0 w-full sm:w-48">
+                    <div className="flex items-center gap-2">
+                      <Palette size={16} />
+                      <SelectValue />
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">Light</SelectItem>
+                    <SelectItem value="dark">Dark</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-2">
                 <Label>Language</Label>
                 <Select value={language} onValueChange={handleLanguageChange}>

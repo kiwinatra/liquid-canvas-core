@@ -5,15 +5,20 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  ArrowUpDown, 
-  Banknote, 
-  Shield, 
+import {
+  ArrowUpDown,
+  Banknote,
+  Shield,
   Clock,
-  Smartphone
+  Smartphone,
+  QrCode,
+  User,
+  Phone
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 interface TransferPageProps {
   onTransferSuccess: (transferData: any) => void;
@@ -21,11 +26,15 @@ interface TransferPageProps {
 
 export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [smsCode, setSmsCode] = useState(['', '', '', '', '', '']);
+  const [qrScanned, setQrScanned] = useState(false);
   const [transferData, setTransferData] = useState({
+    method: 'qr', // 'qr', 'qlid', 'phone'
     fromAccount: '',
-    toAccount: '',
+    qlId: '',
+    phone: '',
     amount: '',
     description: ''
   });
@@ -54,7 +63,7 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
       }
       
       // Check if code is complete
-      if (newCode.every(digit => digit !== '') && newCode.join('') === '123456') {
+      if (newCode.every(digit => digit !== '')) {
         setTimeout(() => {
           setIsConfirmOpen(false);
           onTransferSuccess(transferData);
@@ -67,22 +76,45 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
     }
   };
 
+  const handleScanQr = () => {
+    // Simulate QR scan
+    setQrScanned(true);
+    toast({
+      title: t('transfer.transferSuccessful'),
+      description: "QR-код отсканирован успешно.",
+    });
+  };
+
   const handleTransfer = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!transferData.fromAccount || !transferData.toAccount || !transferData.amount) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
+
+    let isValid = true;
+    let errorMessage = '';
+
+    if (!transferData.fromAccount) {
+      errorMessage = t('transfer.fillRequired');
+      isValid = false;
+    } else if (transferData.method === 'qr' && !qrScanned) {
+      errorMessage = t('transfer.scanQrFirst');
+      isValid = false;
+    } else if (transferData.method === 'qlid' && !transferData.qlId) {
+      errorMessage = t('transfer.enterQlIdFirst');
+      isValid = false;
+    } else if (transferData.method === 'phone' && !transferData.phone) {
+      errorMessage = t('transfer.enterPhoneFirst');
+      isValid = false;
+    } else if (!transferData.amount) {
+      errorMessage = t('transfer.fillRequired');
+      isValid = false;
+    } else if (parseFloat(transferData.amount) <= 0) {
+      errorMessage = t('transfer.invalidAmount');
+      isValid = false;
     }
 
-    if (parseFloat(transferData.amount) <= 0) {
+    if (!isValid) {
       toast({
-        title: "Error", 
-        description: "Please enter a valid amount.",
+        title: t('transfer.error'),
+        description: errorMessage,
         variant: "destructive",
       });
       return;
@@ -94,152 +126,268 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
 
   const resetForm = () => {
     setTransferData({
+      method: 'qr',
       fromAccount: '',
-      toAccount: '',
+      qlId: '',
+      phone: '',
       amount: '',
       description: ''
     });
+    setQrScanned(false);
   };
 
   return (
     <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-2">Transfer Money</h1>
-        <p className="text-muted-foreground">Send money quickly and securely</p>
+        <h1 className="text-2xl font-bold mb-2">{t('transfer.title')}</h1>
+        <p className="text-muted-foreground">{t('transfer.subtitle')}</p>
       </div>
 
       <GlassCard hover className="p-6">
-        <form onSubmit={handleTransfer} className="space-y-6">
-          {/* From Account */}
-          <div className="space-y-2">
-            <Label htmlFor="from-account">From Account</Label>
-            <Select 
-              value={transferData.fromAccount} 
-              onValueChange={(value) => setTransferData(prev => ({...prev, fromAccount: value}))}
-            >
-              <SelectTrigger className="glass-card border-0 glass-hover">
-                <SelectValue placeholder="Select account to transfer from" />
-              </SelectTrigger>
-              <SelectContent>
-                {accounts.map((account) => (
-                  <SelectItem key={account.id} value={account.id}>
-                    <div className="flex items-center justify-between w-full">
-                      <span>{account.name}</span>
-                      <span className="text-muted-foreground ml-4">
-                        ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <form onSubmit={handleTransfer}>
+          <Tabs value={transferData.method} onValueChange={(value) => setTransferData(prev => ({...prev, method: value}))} className="w-full">
+            <TabsList className="grid w-full grid-cols-3 border-0">
+            <TabsTrigger value="qr" className="flex items-center gap-2">
+              <QrCode size={16} />
+              {t('transfer.qr')}
+            </TabsTrigger>
+            <TabsTrigger value="qlid" className="flex items-center gap-2">
+              <User size={16} />
+              {t('transfer.qlId')}
+            </TabsTrigger>
+            <TabsTrigger value="phone" className="flex items-center gap-2">
+              <Phone size={16} />
+              {t('transfer.phone')}
+            </TabsTrigger>
+          </TabsList>
 
-          {/* To Account/Recipient */}
-          <div className="space-y-2">
-            <Label htmlFor="to-account">To Recipient</Label>
-            <Select 
-              value={transferData.toAccount} 
-              onValueChange={(value) => setTransferData(prev => ({...prev, toAccount: value}))}
-            >
-              <SelectTrigger className="glass-card border-0 glass-hover">
-                <SelectValue placeholder="Select recipient" />
-              </SelectTrigger>
-              <SelectContent>
-                {recipients.map((recipient) => (
-                  <SelectItem key={recipient.id} value={recipient.id}>
-                    <div className="flex items-center gap-2">
-                      <span>{recipient.name}</span>
-                      {recipient.account && (
-                        <span className="text-muted-foreground">({recipient.account})</span>
-                      )}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <TabsContent value="qr" className="space-y-6 mt-6">
+            <div className="text-center">
+              <Button
+                type="button"
+                onClick={handleScanQr}
+                className="bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
+                disabled={qrScanned}
+              >
+                <QrCode size={16} className="mr-2" />
+                {qrScanned ? 'QR-код отсканирован' : t('transfer.scanQr')}
+              </Button>
+              {qrScanned && (
+                <p className="text-sm text-muted-foreground mt-2">QR-код успешно отсканирован</p>
+              )}
+            </div>
 
-          {/* Amount */}
-          <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
-            <div className="relative">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-                $
-              </div>
+            {qrScanned && (
+              <>
+                {/* From Account */}
+                <div className="space-y-2">
+                  <Label htmlFor="from-account-qr">{t('transfer.selectAccount')}</Label>
+                  <Select
+                    value={transferData.fromAccount}
+                    onValueChange={(value) => setTransferData(prev => ({...prev, fromAccount: value}))}
+                  >
+                    <SelectTrigger className="glass-card border-0 glass-hover">
+                      <SelectValue placeholder={t('transfer.selectAccount')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {accounts.map((account) => (
+                        <SelectItem key={account.id} value={account.id}>
+                          <div className="flex items-center justify-between w-full">
+                            <span>{account.name}</span>
+                            <span className="text-muted-foreground ml-4">
+                              ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                            </span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Amount */}
+                <div className="space-y-2">
+                  <Label htmlFor="amount-qr">{t('transfer.enterAmount')}</Label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                      $
+                    </div>
+                    <Input
+                      id="amount-qr"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="0.00"
+                      className="glass-card border-0 pl-8 glass-hover"
+                      value={transferData.amount}
+                      onChange={(e) => setTransferData(prev => ({...prev, amount: e.target.value}))}
+                    />
+                  </div>
+                </div>
+
+                {/* Transfer Button */}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
+                  disabled={!transferData.fromAccount || !transferData.amount}
+                >
+                  <ArrowUpDown size={16} className="mr-2" />
+                  {t('transfer.transfer')}
+                </Button>
+              </>
+            )}
+          </TabsContent>
+
+          <TabsContent value="qlid" className="space-y-6 mt-6">
+            {/* QL-ID Input */}
+            <div className="space-y-2">
+              <Label htmlFor="qlid">{t('transfer.enterQlId')}</Label>
               <Input
-                id="amount"
-                type="number"
-                step="0.01"
-                min="0"
-                placeholder="0.00"
-                className="glass-card border-0 pl-8 glass-hover"
-                value={transferData.amount}
-                onChange={(e) => setTransferData(prev => ({...prev, amount: e.target.value}))}
+                id="qlid"
+                placeholder="Введите QL-ID"
+                className="glass-card border-0 glass-hover"
+                value={transferData.qlId}
+                onChange={(e) => setTransferData(prev => ({...prev, qlId: e.target.value}))}
               />
             </div>
-          </div>
 
-          {/* Description */}
-          <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
-            <Textarea
-              id="description"
-              placeholder="What's this transfer for?"
-              className="glass-card border-0 resize-none glass-hover"
-              rows={3}
-              value={transferData.description}
-              onChange={(e) => setTransferData(prev => ({...prev, description: e.target.value}))}
-            />
-          </div>
-
-          {/* Transfer Summary */}
-          {transferData.fromAccount && transferData.toAccount && transferData.amount && (
-            <GlassCard variant="float" morph hover className="p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                <Shield size={16} />
-                Transfer Summary
-              </h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span>From:</span>
-                  <span>{accounts.find(a => a.id === transferData.fromAccount)?.name}</span>
+            {/* Amount */}
+            <div className="space-y-2">
+              <Label htmlFor="amount-qlid">{t('transfer.enterAmount')}</Label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  $
                 </div>
-                <div className="flex justify-between">
-                  <span>To:</span>
-                  <span>{recipients.find(r => r.id === transferData.toAccount)?.name}</span>
-                </div>
-                <div className="flex justify-between font-semibold">
-                  <span>Amount:</span>
-                  <span>${parseFloat(transferData.amount || '0').toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Fee:</span>
-                  <span className="text-success">Free</span>
-                </div>
+                <Input
+                  id="amount-qlid"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  className="glass-card border-0 pl-8 glass-hover"
+                  value={transferData.amount}
+                  onChange={(e) => setTransferData(prev => ({...prev, amount: e.target.value}))}
+                />
               </div>
-            </GlassCard>
-          )}
+            </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-4 pt-4">
-            <Button 
-              type="button" 
-              variant="outline" 
-              className="flex-1 glass-card border-0 glass-hover"
-              onClick={resetForm}
+            {/* From Account */}
+            <div className="space-y-2">
+              <Label htmlFor="from-account-qlid">{t('transfer.selectAccount')}</Label>
+              <Select
+                value={transferData.fromAccount}
+                onValueChange={(value) => setTransferData(prev => ({...prev, fromAccount: value}))}
+              >
+                <SelectTrigger className="glass-card border-0 glass-hover">
+                  <SelectValue placeholder={t('transfer.selectAccount')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.map((account) => (
+                    <SelectItem key={account.id} value={account.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{account.name}</span>
+                        <span className="text-muted-foreground ml-4">
+                          ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Transfer Button */}
+            <Button
+              type="submit"
+              className="w-full bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
+              disabled={!transferData.qlId || !transferData.fromAccount || !transferData.amount}
             >
-              Clear
+              <ArrowUpDown size={16} className="mr-2" />
+              {t('transfer.transfer')}
             </Button>
-            <Button 
-              type="submit" 
-              className="flex-1 bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
+          </TabsContent>
+
+          <TabsContent value="phone" className="space-y-6 mt-6">
+            {/* Phone Input */}
+            <div className="space-y-2">
+              <Label htmlFor="phone">{t('transfer.enterPhone')}</Label>
+              <Input
+                id="phone"
+                placeholder="+7 (999) 123-45-67"
+                className="glass-card border-0 glass-hover"
+                value={transferData.phone}
+                onChange={(e) => setTransferData(prev => ({...prev, phone: e.target.value}))}
+              />
+            </div>
+
+            {/* Amount */}
+            <div className="space-y-2">
+              <Label htmlFor="amount-phone">{t('transfer.enterAmount')}</Label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
+                  $
+                </div>
+                <Input
+                  id="amount-phone"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  placeholder="0.00"
+                  className="glass-card border-0 pl-8 glass-hover"
+                  value={transferData.amount}
+                  onChange={(e) => setTransferData(prev => ({...prev, amount: e.target.value}))}
+                />
+              </div>
+            </div>
+
+            {/* From Account */}
+            <div className="space-y-2">
+              <Label htmlFor="from-account-phone">{t('transfer.selectAccount')}</Label>
+              <Select
+                value={transferData.fromAccount}
+                onValueChange={(value) => setTransferData(prev => ({...prev, fromAccount: value}))}
+              >
+                <SelectTrigger className="glass-card border-0 glass-hover">
+                  <SelectValue placeholder={t('transfer.selectAccount')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.map((account) => (
+                    <SelectItem key={account.id} value={account.id}>
+                      <div className="flex items-center justify-between w-full">
+                        <span>{account.name}</span>
+                        <span className="text-muted-foreground ml-4">
+                          ${account.balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Transfer Button */}
+            <Button
+              type="submit"
+              className="w-full bg-gradient-primary hover:opacity-90 shadow-primary glass-hover"
+              disabled={!transferData.phone || !transferData.fromAccount || !transferData.amount}
             >
-              <ArrowUpDown size={16} />
-              Transfer Money
+              <ArrowUpDown size={16} className="mr-2" />
+              {t('transfer.transfer')}
             </Button>
-          </div>
+          </TabsContent>
+        </Tabs>
         </form>
+
+        {/* Clear Button */}
+        <div className="flex justify-center pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="glass-card border-0 glass-hover"
+            onClick={resetForm}
+          >
+            {t('transfer.clear')}
+          </Button>
+        </div>
       </GlassCard>
 
       {/* Features */}
@@ -269,17 +417,13 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Smartphone size={20} />
-              SMS Verification
+              {t('transfer.smsVerification')}
             </DialogTitle>
             <DialogDescription>
-              We've sent a 6-digit code to your registered mobile number. Enter it below to confirm the transfer.
-              <br />
-              <span className="text-xs text-muted-foreground mt-2 block">
-                (Demo code: 123456)
-              </span>
+              {t('transfer.smsDescription')}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="flex justify-center gap-2">
               {smsCode.map((digit, index) => (
@@ -300,10 +444,10 @@ export default function TransferPage({ onTransferSuccess }: TransferPageProps) {
                 />
               ))}
             </div>
-            
+
             <div className="text-center">
               <Button variant="ghost" size="sm" className="text-primary">
-                Resend Code
+                {t('transfer.resendCode')}
               </Button>
             </div>
           </div>
